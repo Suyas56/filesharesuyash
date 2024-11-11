@@ -10,26 +10,6 @@ function App() {
 
   const url = 'https://i.pinimg.com/originals/16/46/24/1646243661201a0892cc4b1a64fcbacf.jpg';
 
-  // useEffect(() => {
-  //   const getImage = async () => {
-  //     if (file) {
-  //       const data = new FormData();
-  //       data.append("name", file.name);
-  //       data.append("file", file);
-
-  //       try {
-  //         const response = await uploadFile(data);
-  //         console.log('Upload response:', response); // Log the response
-  //         setResult(response.path);
-  //       } catch (error) {
-  //         console.error('Error uploading file:', error);
-  //       }
-  //     }
-  //   }
-  //   getImage();
-  // }, [file])
-
-  // **************************
   useEffect(() => {
     const getImage = async () => {
       if (file) {
@@ -37,22 +17,30 @@ function App() {
         data.append("name", file.name);
         data.append("file", file);
 
-        let response = await uploadFile(data);
-            console.log(response.path)
-        setResult(response.path);
+        try {
+          let response = await uploadFile(data);
+          console.log("Full RESPONSE:", response);  // Log the full response object
+
+          // Check if response is an object and has the 'path' property
+          if (response && response.path) {
+            setResult(response.path);
+          } else {
+            console.error('Response does not contain path:', response);
+            setResult('Error: Invalid response');
+          }
+        } catch (error) {
+          console.error('Error uploading file:', error);
+          setResult('Error uploading file');
+        }
       }
-    }
+    };
     getImage();
-  }, [file])
-
-
-  // *************************
+  }, [file]);
 
   const onUploadClick = () => {
-    console.log(file)
+    console.log(file);
     fileInputRef.current.click();
-  }
-  console.log(file)
+  };
 
   return (
     <div className='container'>
@@ -64,12 +52,12 @@ function App() {
         <button onClick={() => onUploadClick()}>Upload</button>
         <input
           type="file"
-          ref={ fileInputRef}
+          ref={fileInputRef}
           style={{ display: "none" }}
           onChange={(e) => setFile(e.target.files[0])}
         />
 
-        <a href={result} target='_blank' rel="noopener noreferrer">{result}</a> 
+        {result && <a href={result} target='_blank' rel="noopener noreferrer">{result}</a>} 
       </div>
     </div>
   );
