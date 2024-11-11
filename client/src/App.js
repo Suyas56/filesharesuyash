@@ -38,6 +38,7 @@ function App() {
         data.append("file", file);
 
         let response = await uploadFile(data);
+            console.log(response.path)
         setResult(response.path);
       }
     }
